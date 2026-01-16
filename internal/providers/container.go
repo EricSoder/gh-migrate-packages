@@ -142,12 +142,13 @@ func (p *ContainerProvider) FetchPackageFiles(logger *zap.Logger, owner, reposit
 
 // Download pulls a container image from the source registry and saves it locally.
 func (p *ContainerProvider) Download(logger *zap.Logger, owner, repository, packageType, packageName, version, filename string) (ResultState, error) {
-	// Normalize names for container images
-	owner, repository, packageName = p.normalizeNames(owner, repository, packageName)
+	// Normalize names for container registry operations (Docker requires lowercase)
+	// but preserve original owner for file path storage
+	_, _, normalizedPackageName := p.normalizeNames(owner, repository, packageName)
 
 	parts := strings.Split(filename, ":")
 	tag := parts[1]
-	downloadedFilename := fmt.Sprintf("%s-%s.tar", packageName, tag)
+	downloadedFilename := fmt.Sprintf("%s-%s.tar", normalizedPackageName, tag)
 
 	return p.downloadPackage(
 		logger, owner, repository, packageType, packageName, version, filename, &downloadedFilename,
