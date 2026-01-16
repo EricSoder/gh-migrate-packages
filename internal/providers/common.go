@@ -231,7 +231,7 @@ func (p *BaseProvider) uploadPackage(
 	if packageType == "container" {
 		parts := strings.Split(filename, ":")
 		tag := parts[1]
-		packageDir = filepath.Join(migrationPath, "packages", viper.GetString("GHMPKG_SOURCE_ORGANIZATION"), packageType, packageName, tag)
+		packageDir = filepath.Join(migrationPath, "packages", viper.GetString("GHMPKG_SOURCE_ORGANIZATION"), packageType, strings.ToLower(packageName), tag)
 	} else {
 		packageDir = filepath.Join(migrationPath, "packages", viper.GetString("GHMPKG_SOURCE_ORGANIZATION"), packageType, packageName, version)
 	}
